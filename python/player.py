@@ -10,20 +10,24 @@ api = Api(app)
 class UserModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
-    #password = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(80), unique=True, nullable=False)
     gamesWon = db.Column(db.Integer)
+    gamesPlayed = db.Column(db.Integer)
+    rating = db.Column(db.Integer) #WIP
 
     def __repr__(self):
         return f"User(username = {self.username}, gamesWon = {self.gamesWon})"
 
 user_args = reqparse.RequestParser()
 user_args.add_argument('username', type=str, required=True, help="Username cannot be blank")
-#user_args.add_argument('password', type=str, required=True, help="Password cannot be blank")
+user_args.add_argument('password', type=str, required=True, help="Password cannot be blank")
 
 userFields = {
     'id':fields.Integer,
     'gamesWon':fields.Integer,
-    'username':fields.String
+    'gamesPlayed':fields.Integer,
+    'username':fields.String,
+    'password':fields.String
 }
 
 class Users(Resource):
