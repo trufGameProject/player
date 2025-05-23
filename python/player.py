@@ -8,38 +8,39 @@ db = SQLAlchemy(app)
 api = Api(app)
 
 class UserModel(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=True, nullable=False)
-    gamesWon = db.Column(db.Integer)
-    gamesPlayed = db.Column(db.Integer)
-    rating = db.Column(db.Integer) #WIP
+    id = db.Column(db.String(80), primary_key=True, nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+    gamesWon = db.Column(db.Integer, default=0)
+    gamesPlayed = db.Column(db.Integer, default=0)
+    rating = db.Column(db.Integer, default=0) #WIP
 
     def __repr__(self):
-        return f"User(username = {self.username}, gamesWon = {self.gamesWon})"
+        return f"User(id = {self.id}, password = {self.password}, gamesWon = {self.gamesWon}, gamesPlayed = {self.gamesPlayed}, rating = {self.rating})"
 
 user_args = reqparse.RequestParser()
-user_args.add_argument('username', type=str, required=True, help="Username cannot be blank")
+user_args.add_argument('id', type=str, required=True, help="UserId cannot be blank")
 user_args.add_argument('password', type=str, required=True, help="Password cannot be blank")
 
 userFields = {
-    'id':fields.Integer,
+    'id':fields.String,
+    'password':fields.String,
     'gamesWon':fields.Integer,
     'gamesPlayed':fields.Integer,
-    'username':fields.String,
-    'password':fields.String
+    'rating':fields.Integer
 }
 
 class Users(Resource):
+    #Get a list of all the players information
     @marshal_with(userFields)
     def get(self):
         users = UserModel.query.all()
         return users
     
+    #Create a player
     @marshal_with(userFields)
     def post(self):
         args = user_args.parse_args()
-        user = UserModel(username=args["username"])
+        user = UserModel(id=args["id"], password=args["password"])
         db.session.add(user)
         db.session.commit()
         users = UserModel.query.all()
@@ -47,6 +48,7 @@ class Users(Resource):
     
 
 class User(Resource):
+    #Get a specific player
     @marshal_with(userFields)
     def get(self, id):
         user = UserModel.query.filter_by(id=id).first()
@@ -54,16 +56,26 @@ class User(Resource):
             abort(404, "User not found")
         return user
     
+    #Change password
     @marshal_with(userFields)
-    def patch(self, id):
+    def post(self, id):
         args = user_args.parse_args()
         user = UserModel.query.filter_by(id=id).first()
         if not user:
             abort(404, "User not found")
-        user.username = args["username"]
+        user.password = args["password"]
         db.session.commit()
         return user
     
+    #Update stats after game played
+    @marshal_with(userFields)
+    def patch(self, id):
+        user = UserModel.query.filter_by(id=id).first()
+        user.gamesPlayed = user.gamesPlayed + 1
+        db.session.commit()
+        return user
+
+    #Delete player
     @marshal_with(userFields)
     def delete(self, id):
         user = UserModel.query.filter_by(id=id).first()
@@ -74,8 +86,8 @@ class User(Resource):
         users = UserModel.query.all()
         return users, 204
 
-api.add_resource(Users, '/api/users/')
-api.add_resource(User, '/api/users/<int:id>')
+api.add_resource(Users, '/player/')
+api.add_resource(User, '/player/<string:id>')
 
 @app.route("/")
 def home():
