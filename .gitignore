@@ -1,33 +1,29 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Byte-code files
+*.pyc
+__pycache__/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Virtual environment
+venv/
+.venv/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# IDE-specific files (customize as needed)
+.idea/  # PyCharm
+.vscode/ # VS Code
+*.swp   # Vim
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# Build artifacts and packaging
+.Python
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+dist/
+*.egg-info/
 
-### VS Code ###
-.vscode/
+# Logs and databases
+*.log
+*.sqlite3
+
+# Environment variables and sensitive data
+.env
+.flaskenv
+
+# Local Testing
+instance
