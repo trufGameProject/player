@@ -1,6 +1,6 @@
 # Byte-code files
 *.pyc
-python/__pycache__/
+__pycache__/
 
 # Virtual environment
 venv/
@@ -26,4 +26,4 @@ dist/
 .flaskenv
 
 # Local Testing
-python/instance/
+instance/
