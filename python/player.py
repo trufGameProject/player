@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://postgres:abc@127.0.0.1:5432/postgres"
 db = SQLAlchemy(app)
 api = Api(app)
+# DATABASE_URL = "postgresql+psycopg2://postgres:abc@127.0.0.1:5432/postgres" old: 'sqlite:///database.db'
 
 class UserModel(db.Model):
     id = db.Column(db.String(80), primary_key=True, nullable=False)
@@ -43,8 +44,8 @@ class Users(Resource):
         user = UserModel(id=args["id"], password=args["password"])
         db.session.add(user)
         db.session.commit()
-        users = UserModel.query.all()
-        return users, 201
+        #users = UserModel.query.all()
+        return user, 201
     
 
 class User(Resource):
@@ -91,7 +92,7 @@ api.add_resource(User, '/player/<string:id>')
 
 @app.route("/")
 def home():
-    return "<h1>Flask REST API</h1>"
+    return "<h1>Truf</h1>"
 
 if __name__ == '__main__':
     app.run(debug=True)
