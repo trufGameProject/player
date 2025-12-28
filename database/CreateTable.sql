@@ -1,9 +1,10 @@
-create table Player (
-	PlayerID char(50),
-    Password char(50),
-    NumGames int,
-    NumGamesWon int,
-    AbandonedGames int,
-    rating float,
-    CreationDate timestamp
-);
+CREATE TABLE "playerTable" (
+	"id" VARCHAR(80) NOT NULL,
+	"password" VARCHAR(80) NOT NULL,
+	"gamesWon" INTEGER NOT NULL DEFAULT '0',
+	"gamesPlayed" INTEGER NOT NULL DEFAULT '0',
+	"gamesAbandoned" INTEGER NOT NULL DEFAULT '0',
+	"rating" INTEGER NOT NULL DEFAULT '100',
+	"creationDate" TIMESTAMP NOT NULL
+)
+;
