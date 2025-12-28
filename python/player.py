@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from flask_restful import Resource, Api, reqparse, fields, marshal_with, abort
 
 app = Flask(__name__)
@@ -13,7 +14,9 @@ class UserModel(db.Model):
     password = db.Column(db.String(80), nullable=False)
     gamesWon = db.Column(db.Integer, default=0)
     gamesPlayed = db.Column(db.Integer, default=0)
-    rating = db.Column(db.Integer, default=0) #WIP
+    gamesAbandoned = db.Column(db.Integer, default=0)
+    rating = db.Column(db.Integer, default=100) #WIP
+    creationDate = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f"User(id = {self.id}, password = {self.password}, gamesWon = {self.gamesWon}, gamesPlayed = {self.gamesPlayed}, rating = {self.rating})"
@@ -27,7 +30,9 @@ userFields = {
     'password':fields.String,
     'gamesWon':fields.Integer,
     'gamesPlayed':fields.Integer,
-    'rating':fields.Integer
+    'gamesAbandoned':fields.Integer,
+    'rating':fields.Integer,
+    'creationDate':fields.DateTime
 }
 
 class Users(Resource):

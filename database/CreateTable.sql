@@ -1,28 +1,9 @@
 create table Player (
 	PlayerID char(50),
-    Skill long,
+    Password char(50),
     NumGames int,
+    NumGamesWon int,
     AbandonedGames int,
-    Rank1 int,
-    Rank2 int,
-    Rank3 int,
-    Rank4 int,
+    rating float,
     CreationDate timestamp
-);
-
-create table Identity (
-	PlayerID char(50),
-    Passcode char(50)
-);
-
-create table PlayerHistory (
-	PlayerID char(50),
-    HistoryDate date,
-    Skill long,
-    NumGames int,
-    AbandonedGames int,
-    Rank1 int,
-    Rank2 int,
-    Rank3 int,
-    Rank4 int
 );
