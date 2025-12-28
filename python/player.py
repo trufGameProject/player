@@ -10,6 +10,8 @@ api = Api(app)
 # DATABASE_URL = "postgresql+psycopg2://postgres:abc@127.0.0.1:5432/postgres" old: 'sqlite:///database.db'
 
 class UserModel(db.Model):
+    __tablename__= "playerTable"
+
     id = db.Column(db.String(80), primary_key=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     gamesWon = db.Column(db.Integer, default=0)
