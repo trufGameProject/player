@@ -27,6 +27,10 @@ user_args = reqparse.RequestParser()
 user_args.add_argument('id', type=str, required=True, help="UserId cannot be blank")
 user_args.add_argument('password', type=str, required=True, help="Password cannot be blank")
 
+user_update = reqparse.RequestParser()
+user_update.add_argument('result', type=str, required=False)
+user_update.add_argument('placement', type=int, required=False)
+
 userFields = {
     'id':fields.String,
     'password':fields.String,
@@ -74,14 +78,6 @@ class User(Resource):
         user.password = args["password"]
         db.session.commit()
         return user
-    
-    #Update stats after game played
-    @marshal_with(userFields)
-    def patch(self, id):
-        user = UserModel.query.filter_by(id=id).first()
-        user.gamesPlayed = user.gamesPlayed + 1
-        db.session.commit()
-        return user
 
     #Delete player
     @marshal_with(userFields)
@@ -94,8 +90,38 @@ class User(Resource):
         users = UserModel.query.all()
         return users, 204
 
+
+class UserUpdate(Resource):
+    #Update stats after game played
+    @marshal_with(userFields)
+    def post(self, id, operation):
+        args = user_update.parse_args()
+        user = UserModel.query.filter_by(id=id).first()
+        #Updates game statistics
+        if(operation == "gameresult"):
+            user.gamesPlayed = user.gamesPlayed + 1
+            result = args["result"]
+            if(result == "win"):
+                user.gamesWon = user.gamesWon + 1
+            if(result == "abandon"):
+                user.gamesAbandoned = user.gamesAbandoned + 1
+        #Updates rating
+        if(operation == "rating"):
+            placement = args["placement"]
+            if(placement == 1):
+                user.rating = user.rating + 20
+            if(placement == 2):
+                user.rating = user.rating + 10
+            if(placement == 3):
+                user.rating = user.rating - 10
+            if(placement == 4):
+                user.rating = user.rating - 20
+        db.session.commit()
+        return user
+
 api.add_resource(Users, '/player/')
 api.add_resource(User, '/player/<string:id>')
+api.add_resource(UserUpdate, '/player/<string:id>/<string:operation>')
 
 @app.route("/")
 def home():
