@@ -21,7 +21,7 @@ class UserModel(db.Model):
     creationDate = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"User(id = {self.id}, password = {self.password}, gamesWon = {self.gamesWon}, gamesPlayed = {self.gamesPlayed}, rating = {self.rating})"
+        return f"User(id = {self.id}, password = {self.password}, gamesWon = {self.gamesWon}, gamesPlayed = {self.gamesPlayed}, gamesAbandoned = {self.gamesAbandoned}, rating = {self.rating}, creationDate = {self.creationDate})"
 
 user_args = reqparse.RequestParser()
 user_args.add_argument('id', type=str, required=True, help="UserId cannot be blank")
